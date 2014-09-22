@@ -2,7 +2,7 @@ class App < ApplicationController
   # session NEW
   get('/') do
     if session[:current_user] # if there is a user set in the session
-      redirect to("/viewer/#{session[:current_user][:id]}")
+      redirect to("/viewers/#{session[:current_user][:id]}")
     else
       render(:erb, :'session/new')
     end
@@ -20,7 +20,7 @@ class App < ApplicationController
       # add a user to the session hash
       current_user_id = user.id
       session[:current_user]  = {id: current_user_id}
-      redirect to("/viewer/#{current_user_id}")
+      redirect to("/viewers/#{current_user_id}")
     end
   end
 
@@ -32,8 +32,8 @@ class App < ApplicationController
   end
 
   # viewer SHOW
-  get('/viewer/:id') do
+  get('/viewers/:id') do
     @viewer = Viewer.find(id: params[:id])
-    render(:erb, :'viewer/show')
+    render(:erb, :'viewers/show')
   end
 end

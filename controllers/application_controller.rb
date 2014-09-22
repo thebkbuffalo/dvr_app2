@@ -17,6 +17,6 @@ class ApplicationController < Sinatra::Base
     register Sinatra::Reloader
   end
 
-  # add a flash has to our website! https://github.com/treeder/rack-flash
+  # add a flash hash to our website! https://github.com/treeder/rack-flash
   use Rack::Flash
 end

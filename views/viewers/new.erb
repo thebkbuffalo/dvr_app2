@@ -1,14 +1,12 @@
-<h1>Welcome to the DVR App</h1>
+<h1>Create a New User!</h1>
 
-<form method="POST" action="/session">
+<form method="POST" action="/viewers">
   <label for="name">Enter User Name</label>
   <input type="text" name="user_name" id="name" /><br/>
   <label for="password">Enter Password</label>
   <input type="password" name="password" id="password" disabled/><br/>
-  <input type="submit" value="Login" />
+  <input type="submit" value="Create" />
 </form>
-
-<p><%= link_to('Sign up as a new user!','/viewers/new') %></p>
 
 <% if flash[:error] %>
   <p style="color:red;"><%= flash[:error] %></p>

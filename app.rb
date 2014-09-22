@@ -31,9 +31,36 @@ class App < ApplicationController
     redirect to('/')
   end
 
-  # viewer SHOW
+  # viewers NEW (must come before the id matcher below!)
+  get('/viewers/new') do
+    render(:erb, :'viewers/new')
+  end
+
+  # viewers SHOW
   get('/viewers/:id') do
     @viewer = Viewer.find(id: params[:id])
     render(:erb, :'viewers/show')
+  end
+
+  # viewers CREATE
+  post('/viewers') do
+    user = Viewer.find(name: params[:user_name])
+    if user # if a user with this name already exists!
+      flash[:error] = "This user already exists!"
+      redirect to('/viewers/new')
+    else
+      # create the new user!
+      user = Viewer.create(name: params[:user_name])
+      
+      # add a nice message
+      flash[:welcome] = 'Welcome to the DVR App!'
+
+      # log in as the new user!
+      current_user_id = user.id
+      session[:current_user]  = {id: current_user_id}
+
+      # redirect to the user's show page
+      redirect to("/viewers/#{current_user_id}")
+    end
   end
 end

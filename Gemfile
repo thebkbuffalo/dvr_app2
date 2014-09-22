@@ -8,6 +8,7 @@ gem 'redis',    '3.1.0'
 gem 'httparty', '0.13.1'
 gem 'sequel',   '~> 4.14.0'
 gem 'pg',       '~> 0.17.1'
+gem 'rubyzip',  '~> 1.1.0' # get data in episode file!
 
 # only used in development locally
 group :development, :test do

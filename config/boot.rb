@@ -1,4 +1,4 @@
-DB = Sequel.connect("postgres://localhost:5432/dvr_app2_development")
+DB = Sequel.connect("postgres://localhost:5432/dvr_app_development")
 Dir['./helpers/*.rb'].each { |helper| require helper }
 Dir['./models/*.rb'].each { |model| require model }
 require './controllers/application_controller'

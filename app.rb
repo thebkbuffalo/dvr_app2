@@ -10,12 +10,15 @@ class App < ApplicationController
 
   # session CREATE
   post('/session') do
+    
     # look up the user by the name in params
     user = Viewer.find(name: params[:user_name])
     if user.nil? # if there was no user found with that name
       # flash is like session, except it only lasts for ONE MORE request!
-      flash[:error] = "No user found with that name!"
-      redirect to('/')
+      # flash[:error] = "No user found with that name!"
+      new_user = params[:user_name]
+      Viewer.create(new_user)
+      redirect to('/viewer/id')
     else
       # add a user to the session hash
       current_user_id = user.id

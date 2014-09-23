@@ -60,9 +60,6 @@ namespace :db do
     sh("dropdb #{dbname}_#{env}")
   end
 
-<<<<<<< HEAD
-  desc "seed db"
-=======
   desc "Run database migrations"
   task :migrate, :env do |cmd, args|
     env = args[:env] || "development"
@@ -79,7 +76,6 @@ namespace :db do
   # $ rake db:seed
   # $ rake db:seed[test]
   # $ rake db:seed[production]
->>>>>>> d82351cbbb382d758659fe3309f600dccc4babfe
   task :seed, [:env] do |cmd, args|
     # default environment
     env = args[:env] || "development"
@@ -87,11 +83,6 @@ namespace :db do
     # then populate my database
     # calls rake environment[env]
     Rake::Task['environment'].invoke(env)
-<<<<<<< HEAD
-    require './db/seeds'
-  end
-end
-=======
     Rake::Task['milkshakes'].invoke
     require './db/seeds'
   end
@@ -100,11 +91,3 @@ end
 task :milkshakes do
   puts "come hither"
 end
-
-
-
-
-
-
-
->>>>>>> d82351cbbb382d758659fe3309f600dccc4babfe

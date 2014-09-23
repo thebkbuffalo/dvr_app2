@@ -17,6 +17,7 @@ Dir["../models/*.rb"].each {|file| require file }
 Episode.dataset.destroy
 Series.dataset.destroy
 Station.dataset.destroy
+Viewer.dataset.destroy
 
 # get raw stations data
 raw_stations = YAML.load File.read('../data/stations.yaml')

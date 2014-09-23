@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS episodes;
 DROP TABLE IF EXISTS recordings;
 DROP TABLE IF EXISTS viewers;
 
-CREATE TABLE stations (
+CREATE TABLE station (
   id           serial       PRIMARY KEY,
   name         varchar(255) NOT NULL,
   channel      integer      NOT NULL,

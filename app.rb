@@ -68,4 +68,17 @@ class App < ApplicationController
       redirect to("/viewers/#{current_user_id}")
     end
   end
+
+  # viewers EDIT
+  get('/viewers/:id/edit') do
+    @viewer = Viewer.find(id: session[:current_user][:id])
+    render(:erb, :'viewers/edit')
+  end
+
+  # viewers UPDATE
+  put('/viewers/:id') do
+    viewer = Viewer.find(id: session[:current_user][:id])
+    viewer.update(name: params[:user_name])
+    redirect to("/viewers/#{viewer.id}")
+  end
 end

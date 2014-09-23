@@ -1,6 +1,6 @@
 DROP DATABASE IF EXISTS dvr_app_development;
 CREATE DATABASE dvr_app_development;
-\c dvr_app2_development
+\c dvr_app_development
 
 DROP TABLE IF EXISTS stations;
 DROP TABLE IF EXISTS series;

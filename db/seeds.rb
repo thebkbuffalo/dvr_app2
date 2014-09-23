@@ -62,8 +62,8 @@ end
 
 # take only one entry from each series (there will be one for each episode in
 #  the series by default), and iterate thru...
-raw_series = raw_series.uniq
-total      = raw_series.length                # get total for loggin below!
+raw_series = raw_series.uniq.take(10)
+total      = raw_series.length                # get total for logging below!
 raw_series.each_with_index do |series, index| # get index for logging below!
   series = Series.create(
     title:      series[:title],

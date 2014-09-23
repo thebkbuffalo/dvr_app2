@@ -2,7 +2,12 @@ class App < ApplicationController
   # session NEW
   get('/') do
     if session[:current_user] # if there is a user set in the session
-      redirect to("/viewers/#{session[:current_user][:id]}")
+      if Viewer.find(id: session[:current_user][:id]) # if there is a viewer with that id
+        redirect to("/viewers/#{session[:current_user][:id]}")
+      else # the session is referring to a user who no longer exists!
+        session[:current_user] = nil # clear the session
+        render(:erb, :'session/new')
+      end
     else
       render(:erb, :'session/new')
     end

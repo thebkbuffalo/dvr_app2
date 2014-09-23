@@ -5,6 +5,7 @@
 Episode.dataset.destroy
 Series.dataset.destroy
 Station.dataset.destroy
+Viewer.dataset.destroy
 
 # get raw stations data
 station_file = File.expand_path('../../data/stations.yaml',__FILE__)

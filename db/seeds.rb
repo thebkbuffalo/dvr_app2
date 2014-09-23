@@ -1,17 +1,5 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-
-# require libs
-require 'zip'
-require 'sequel'
-require 'yaml'
-
-# connect to db
-DB = Sequel.connect("postgres://localhost/dvr_app_development")
-
-# require models (important to do this after connecting to the DB, remember!)
-Dir["../models/*.rb"].each {|file| require file }
 
 # clean it out!
 Episode.dataset.destroy
@@ -19,7 +7,8 @@ Series.dataset.destroy
 Station.dataset.destroy
 
 # get raw stations data
-raw_stations = YAML.load File.read('../data/stations.yaml')
+station_file = File.expand_path('../../data/stations.yaml',__FILE__)
+raw_stations = YAML.load(File.read(station_file))
 
 Station.unrestrict_primary_key # we are setting the KEY here, so you have to call this
 
@@ -43,7 +32,8 @@ end
 # open up the zip file as a stream
 zip_stream = nil # declare outside of block so that it has file local scope...
                  #   ie, we can access it after we close the block!
-Zip::File.open('../data/episodes.yaml.zip') do |zip_file|
+episode_file = File.expand_path('../../data/episodes.yaml.zip',__FILE__)
+Zip::File.open(episode_file) do |zip_file|
   # derived from https://github.com/rubyzip/rubyzip
   zip_stream = zip_file.entries[0].get_input_stream
 end

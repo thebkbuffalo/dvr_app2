@@ -23,22 +23,9 @@ namespace :db do
     Rake::Task['db:seed'].invoke(env)
   end
 
-<<<<<<< HEAD
-  desc "Run database migrations"
-  task :migrate, :env do |cmd, args|
-    env = args[:env] || "development"
-    Rake::Task['environment'].invoke(env)
-    require 'sequel/extensions/migration'
-    # apply database, migration_folder
-    Sequel::Migrator.apply(DB, "db/migrations")
-  end
 
-   desc "Rollback the database"
-   task :rollback, :env do |cmd, args|
-=======
   desc "Rollback the database"
   task :rollback, :env do |cmd, args|
->>>>>>> d82351cbbb382d758659fe3309f600dccc4babfe
     env = args[:env] || "development"
     Rake::Task['environment'].invoke(env)
     require 'sequel/extensions/migration'

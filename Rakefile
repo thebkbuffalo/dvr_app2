@@ -1,3 +1,14 @@
+require 'rake'
+
+# A method to get the name of our project from the root directory
+# Rakefiles are just ruby so we can write methods in here too!
+def project_name
+  # __dir__ Returns the canonicalized absolute path of the directory of the
+  # file from which this method is called.
+  # evivalent to File.dirname(File.realpath(__FILE__)).
+  File.basename(__dir__)
+end
+
 namespace :bundler do
   task :setup do
     require 'rubygems'
@@ -9,8 +20,8 @@ end
 # $ rake environment[test]
 # $ rake environment[production]
 task :environment, [:env] => 'bundler:setup' do |cmd, args|
-  ENV["RACK_ENV"] = args[:env] || "development"
-  Bundler.require(:default, ENV["RACK_ENV"])
+  env = args[:env] || ENV["RACK_ENV"] || "development"
+  Bundler.require(:default, env)
   require "./config/boot"
 end
 
@@ -18,8 +29,12 @@ namespace :db do
 
   desc "creates db, applies migrations, seeds db"
   task :setup, [:env] do |cmd, args|
-    env = args[:env] || "development"
-    Rake::Task['db:drop'].invoke(env)
+    # ENV["RACK_ENV"] is set to production on heroku
+    # to invoke the task in a specific environment
+    # we can run the task in two ways:
+    #   $ rake db:setup[test]
+    #   $ rake db:setup RACK_ENV=test
+    env = args[:env] || ENV["RACK_ENV"] || "development"
     Rake::Task['db:create'].invoke(env)
     Rake::Task['db:migrate'].invoke(env)
     Rake::Task['db:seed'].invoke(env)
@@ -27,7 +42,8 @@ namespace :db do
 
   desc "Rollback the database"
   task :rollback, :env do |cmd, args|
-    env = args[:env] || "development"
+    puts "reversing migration"
+    env = args[:env] || ENV["RACK_ENV"] || "development"
     Rake::Task['environment'].invoke(env)
     require 'sequel/extensions/migration'
     version = (row = DB[:schema_info].first) ? row[:version] : nil
@@ -36,21 +52,21 @@ namespace :db do
 
   desc "creates a db"
   task :create, [:env] do |cmd, args|
-    env = args[:env] || "development"
-    dbname = "dvr_app"
-    sh("createdb #{dbname}_#{env}")
+    env = args[:env] || ENV["RACK_ENV"] || "development"
+    sh("createdb #{project_name}_#{env}")
   end
 
   desc "drop db"
   task :drop, [:env] do |cmd, args|
-    env = args[:env] || "development"
-    dbname = "dvr_app"
-    sh("dropdb #{dbname}_#{env}")
+    puts "Dropping db"
+    env = args[:env] || ENV["RACK_ENV"] || "development"
+    sh("dropdb #{project_name}_#{env}")
   end
 
   desc "Run database migrations"
   task :migrate, :env do |cmd, args|
-    env = args[:env] || "development"
+    puts "Running migrations"
+    env = args[:env] || ENV["RACK_ENV"] || "development"
     Rake::Task['environment'].invoke(env)
     require 'sequel/extensions/migration'
     # apply database, migration_folder
@@ -66,7 +82,8 @@ namespace :db do
   # $ rake db:seed[production]
   task :seed, [:env] do |cmd, args|
     # default environment
-    env = args[:env] || "development"
+    puts "seeding db"
+    env = args[:env] || ENV["RACK_ENV"] || "development"
     # load up my sinatra environment
     # then populate my database
     # calls rake environment[env]
@@ -79,10 +96,6 @@ end
 task :milkshakes do
   puts "come hither"
 end
-
-
-
-
 
 
 

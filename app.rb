@@ -81,4 +81,17 @@ class App < ApplicationController
     viewer.update(name: params[:user_name])
     redirect to("/viewers/#{viewer.id}")
   end
+
+  # viewers DELETE
+  delete('/viewers/:id') do
+    viewer = Viewer.find(id: session[:current_user][:id])
+    viewer.destroy
+    # clear out the user from the session
+    session[:current_user] = nil
+
+    # leave a nice message
+    flash[:error] = "Sorry to see you go... Come back soon!"
+    
+    redirect to('/')
+  end
 end

@@ -56,6 +56,9 @@ class App < ApplicationController
     else
       # create the new user!
       user = Viewer.create(name: params[:user_name])
+
+      # added a method to the helper!
+      mail(subject: "New user update", body: "User '#{user.name}' created!")
       
       # add a nice message
       flash[:welcome] = 'Welcome to the DVR App!'
@@ -86,12 +89,16 @@ class App < ApplicationController
   delete('/viewers/:id') do
     viewer = Viewer.find(id: session[:current_user][:id])
     viewer.destroy
+
+    # added a method to the helper!
+    mail(subject: "User deleted update", body: "User '#{viewer.name}' deleted!")
+
     # clear out the user from the session
     session[:current_user] = nil
 
     # leave a nice message
     flash[:error] = "Sorry to see you go... Come back soon!"
-    
+
     redirect to('/')
   end
 end

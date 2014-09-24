@@ -5,6 +5,14 @@
 Episode.dataset.destroy
 Series.dataset.destroy
 Station.dataset.destroy
+Viewer.dataset.destroy
+
+# FIXME (phlco) calling rake db:setup throws an undefined method error on the column header setters
+# this checks the column headers and refreshes them
+Episode.columns
+Series.columns
+Station.columns
+Viewer.columns
 
 # get raw stations data
 station_file = File.expand_path('../../data/stations.yaml',__FILE__)
@@ -13,6 +21,7 @@ raw_stations = YAML.load(File.read(station_file))
 Station.unrestrict_primary_key # we are setting the KEY here, so you have to call this
 
 # iterate and insert
+
 raw_stations.each do |raw_station|
   Station.create(
     id:           raw_station[:channel_id].to_i,
@@ -52,8 +61,8 @@ end
 
 # take only one entry from each series (there will be one for each episode in
 #  the series by default), and iterate thru...
-raw_series = raw_series.uniq
-total      = raw_series.length                # get total for loggin below!
+raw_series = raw_series.uniq.take(100)
+total      = raw_series.length                # get total for logging below!
 raw_series.each_with_index do |series, index| # get index for logging below!
   series = Series.create(
     title:      series[:title],

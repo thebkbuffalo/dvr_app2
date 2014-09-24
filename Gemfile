@@ -10,10 +10,12 @@ gem 'sequel',   '~> 4.14.0'
 gem 'pg',       '~> 0.17.1'
 gem 'rubyzip',  '~> 1.1.0' # get data in episode file!
 gem 'rack-flash3', '>= 1.0.4' # get a flash hash!
+gem 'pony'
 
 # only used in development locally
 group :development, :test do
   gem 'pry',     '0.10.1'
+  gem 'pry-coolline' # remove that dumb warning!
   gem 'sinatra-contrib'
 end
 

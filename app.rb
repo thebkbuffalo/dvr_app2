@@ -2,7 +2,12 @@ class App < ApplicationController
   # session NEW
   get('/') do
     if session[:current_user] # if there is a user set in the session
-      redirect to("/viewer/#{session[:current_user][:id]}")
+      if current_user # if there is a viewer with that id
+        redirect to("/viewers/#{current_user.id}")
+      else # the session is referring to a user who no longer exists!
+        remove_current_user # clear the session
+        render(:erb, :'session/new')
+      end
     else
       render(:erb, :'session/new')
     end
@@ -20,23 +25,78 @@ class App < ApplicationController
       Viewer.create(new_user)
       redirect to('/viewer/id')
     else
-      # add a user to the session hash
-      current_user_id = user.id
-      session[:current_user]  = {id: current_user_id}
-      redirect to("/viewer/#{current_user_id}")
+      set_current_user_as user
+      redirect to("/viewers/#{current_user.id}")
     end
   end
 
   # session DELETE
   delete('/session') do
-    # clear out the user from the session
-    session[:current_user] = nil
+    remove_current_user
     redirect to('/')
   end
 
-  # viewer SHOW
-  get('/viewer/:id') do
+  # viewers NEW (must come before the id matcher below!)
+  get('/viewers/new') do
+    render(:erb, :'viewers/new')
+  end
+
+  # viewers SHOW
+  get('/viewers/:id') do
     @viewer = Viewer.find(id: params[:id])
-    render(:erb, :'viewer/show')
+    render(:erb, :'viewers/show')
+  end
+
+  # viewers CREATE
+  post('/viewers') do
+    user = Viewer.find(name: params[:user_name])
+    if user # if a user with this name already exists!
+      flash[:error] = "This user already exists!"
+      redirect to('/viewers/new')
+    else
+      # create the new user!
+      user = Viewer.create(name: params[:user_name])
+
+      # added a method to the helper!
+      mail(subject: "New user update", body: "User '#{user.name}' created!")
+      
+      # add a nice message
+      flash[:welcome] = 'Welcome to the DVR App!'
+
+      # log in as the new user!
+      set_current_user_as user
+
+      # redirect to the user's show page
+      redirect to("/viewers/#{current_user.id}")
+    end
+  end
+
+  # viewers EDIT
+  get('/viewers/:id/edit') do
+    @viewer = Viewer.find(id: params[:id])
+    render(:erb, :'viewers/edit')
+  end
+
+  # viewers UPDATE
+  put('/viewers/:id') do
+    viewer = Viewer.find(id: params[:id])
+    viewer.update(name: params[:user_name])
+    redirect to("/viewers/#{viewer.id}")
+  end
+
+  # viewers DELETE
+  delete('/viewers/:id') do
+    viewer = Viewer.find(id: params[:id])
+    viewer.destroy
+
+    # added a method to the helper!
+    mail(subject: "User deleted update", body: "User '#{viewer.name}' deleted!")
+
+    remove_current_user
+
+    # leave a nice message
+    flash[:error] = "Sorry to see you go... Come back soon!"
+
+    redirect to('/')
   end
 end

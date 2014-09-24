@@ -1,0 +1,9 @@
+<div>
+  <p><button>See TV Listings</button></p>
+  <p><button>See Scheduled Recordings</button></p>
+  <p><button>Watch Recorded Shows</button></p>
+</div>
+
+<% if flash[:welcome] %>
+  <p style="color:green;"><%= flash[:welcome] %></p>
+<% end %>
